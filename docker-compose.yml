@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: netrajyoti
+      POSTGRES_USER: netrajyoti
+      POSTGRES_PASSWORD: netrajyoti_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - netrajyoti_pgdata:/var/lib/postgresql/data
+
+volumes:
+  netrajyoti_pgdata:

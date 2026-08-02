@@ -1,0 +1,38 @@
+# Dependencies
+**/node_modules/
+
+# Generated application output
+frontend/dist/
+backend/target/
+*.class
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs and local runtime data
+*.log
+logs/
+frontend/playwright-report/
+frontend/test-results/
+frontend/.vite/
+
+# IDE and editor files
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+desktop.ini

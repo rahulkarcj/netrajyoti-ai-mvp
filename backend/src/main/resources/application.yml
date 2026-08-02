@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: netrajyoti-api
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/netrajyoti}
+    username: ${DATABASE_USERNAME:netrajyoti}
+    password: ${DATABASE_PASSWORD:netrajyoti_local}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  sql:
+    init:
+      mode: always
+server:
+  error:
+    include-message: never
+netrajyoti:
+  cors-origin: ${CORS_ORIGIN:http://localhost:5173}
+  ai-summary:
+    enabled: ${AI_SUMMARY_ENABLED:false}
+    api-key: ${OPENAI_API_KEY:}
+    model: ${OPENAI_MODEL:gpt-5.6-sol}

@@ -1,0 +1,9 @@
+{
+  "name": "netrajyoti-pwa",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": { "dev": "vite", "build": "tsc -b && vite build", "test": "vitest run", "e2e": "playwright test" },
+  "dependencies": { "@vitejs/plugin-react": "latest", "vite": "latest", "react": "latest", "react-dom": "latest", "vite-plugin-pwa": "latest" },
+  "devDependencies": { "@types/react": "latest", "@types/react-dom": "latest", "typescript": "latest", "tailwindcss": "latest", "@tailwindcss/vite": "latest", "vitest": "latest", "jsdom": "latest", "@testing-library/react": "latest", "@testing-library/jest-dom": "latest", "@playwright/test": "latest" }
+}
