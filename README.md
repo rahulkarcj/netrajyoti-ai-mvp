@@ -1,6 +1,6 @@
 # NetraJyoti AI MVP
 
-NetraJyoti is a Bengali-first, non-diagnostic eye-care guidance PWA. It routes a user to one of three fixed outcomes: urgent care, routine care, or human support. It does not diagnose conditions or prescribe treatment.
+NetraJyoti is a Bengali-first, non-diagnostic eye-care guidance PWA for rural West Bengal. It helps people describe an eye-health concern, understand a safe next step, and identify an appropriate type of eye-care service without relying on text-heavy English applications. It routes users to one of three fixed outcomes: urgent care, routine care, or human support. It does not diagnose conditions or prescribe treatment.
 
 ## Structure
 
