@@ -10,9 +10,10 @@ NetraJyoti is a Bengali-first, non-diagnostic eye-care guidance PWA for rural We
 
 ## Run locally
 
-1. Start PostgreSQL: `docker compose up -d db`
-2. In `backend`, run `mvn spring-boot:run`.
-3. In `frontend`, run `npm install` then `npm run dev`.
+1. Set the PostgreSQL and backend connection values in your terminal or secret manager. Do not place them in a tracked file.
+2. Start PostgreSQL: `docker compose up -d db`
+3. In `backend`, run `mvn spring-boot:run`.
+4. In `frontend`, run `npm install` then `npm run dev`.
 
 The frontend uses `http://localhost:8080` by default. Set `VITE_API_BASE_URL` when deploying.
 
@@ -20,7 +21,7 @@ The frontend uses `http://localhost:8080` by default. Set `VITE_API_BASE_URL` wh
 
 - Commit source code, tests, `package-lock.json`, and `pnpm-lock.yaml` only when the team intentionally supports both package managers. This project is documented for npm, so use `npm install` and keep `package-lock.json` current.
 - Do not commit `node_modules`, `frontend/dist`, `backend/target`, `.env` files, logs, or credentials. These are excluded by the root `.gitignore`.
-- Use `frontend/.env.example` and `backend/.env.example` as non-secret references. Copy values into your local shell or an untracked `.env` file only if your local tooling supports it.
+- Keep all local configuration in your terminal, deployment secret store, or an untracked local file. No environment file is included in this repository.
 - Before the first push, run `git status --ignored` and confirm that no API key, build output, or dependency directory is staged.
 
 ## Controlled AI caregiver summary (optional pilot)

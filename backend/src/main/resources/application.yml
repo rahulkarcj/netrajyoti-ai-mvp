@@ -2,9 +2,10 @@ spring:
   application:
     name: netrajyoti-api
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/netrajyoti}
-    username: ${DATABASE_USERNAME:netrajyoti}
-    password: ${DATABASE_PASSWORD:netrajyoti_local}
+    # Supplied only through the local environment or a deployment secret store.
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
