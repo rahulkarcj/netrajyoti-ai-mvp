@@ -1,0 +1,90 @@
+{
+  "dataset_status": "DEMO_ONLY_NOT_CLINICALLY_APPROVED",
+  "dataset_version": "1.0",
+  "created_on": "2026-08-26",
+  "purpose": "Engineering and capstone demonstration of a source-governed RAG and deterministic-routing model. The pathway logic below must be clinically reviewed before any real use.",
+  "pathways": [
+    {
+      "pathway_id": "demo-urgent-warning-signs-v1",
+      "title": "Urgent warning-sign pathway",
+      "source_ids": ["WHO-VESIH-2024", "WHO-PECI-2022"],
+      "status": "DEMO_ONLY_NOT_CLINICALLY_APPROVED",
+      "scope": "Demonstrates an urgent route when a configured warning-sign answer is present.",
+      "criteria": {
+        "urgent_if_any": ["SUDDEN_VISION_CHANGE", "SEVERE_PAIN", "INJURY_OR_CHEMICAL"],
+        "escalate_if_any": ["INPUT_UNCLEAR", "CONFLICTING_RESPONSES"]
+      },
+      "required_actions": {
+        "URGENT": ["Seek in-person urgent eye-care assessment without delay.", "Do not wait for an AI explanation before following the urgent route."]
+      },
+      "guidance": {
+        "route": "URGENT",
+        "language": "bn",
+        "guidance_type": "PATIENT_NEXT_STEPS",
+        "text": "এই ডেমো স্ক্রিনিংয়ে জরুরি সতর্ক-লক্ষণ চিহ্নিত হয়েছে। দেরি না করে সরাসরি চোখের জরুরি চিকিৎসাসেবা নিন। সম্ভব হলে পরিবারের একজন বিশ্বস্ত সদস্যকে সঙ্গে নিন।",
+        "source_label": "Demo pathway derived for demonstration from cited screening and intervention references."
+      }
+    },
+    {
+      "pathway_id": "demo-routine-vision-check-v1",
+      "title": "Routine vision-check pathway",
+      "source_ids": ["WHO-VESIH-2024", "WHO-PECI-2022"],
+      "status": "DEMO_ONLY_NOT_CLINICALLY_APPROVED",
+      "scope": "Demonstrates a non-urgent route only when no configured urgent warning-sign code is present.",
+      "criteria": {
+        "routine_if_all": ["NO_CONFIGURED_URGENT_WARNING_SIGN", "BLURRY_VISION_OR_READING_DIFFICULTY_OR_EYE_CHECK_NEED"],
+        "escalate_if_any": ["INPUT_UNCLEAR", "CONFLICTING_RESPONSES", "NO_APPROVED_PATHWAY_MATCHED"]
+      },
+      "required_actions": {
+        "ROUTINE": ["Plan an in-person eye examination through an appropriate vision centre or eye clinic.", "Confirm service availability before travel."]
+      },
+      "guidance": {
+        "route": "ROUTINE",
+        "language": "bn",
+        "guidance_type": "PATIENT_NEXT_STEPS",
+        "text": "এই ডেমো স্ক্রিনিংয়ে জরুরি সতর্ক-লক্ষণ পাওয়া যায়নি। চোখ পরীক্ষা করানোর জন্য ভিশন সেন্টার বা চোখের ক্লিনিকে যাওয়ার পরিকল্পনা করুন। যাওয়ার আগে পরিষেবার সময় নিশ্চিত করুন।",
+        "source_label": "Demo pathway derived for demonstration from cited screening and intervention references."
+      }
+    },
+    {
+      "pathway_id": "demo-redness-or-discharge-escalation-v1",
+      "title": "Redness, irritation, or discharge escalation pathway",
+      "source_ids": ["WHO-VESIH-2024", "WHO-PECI-2022"],
+      "status": "DEMO_ONLY_NOT_CLINICALLY_APPROVED",
+      "scope": "Conservative demonstration pathway: directs symptoms that need more context to human support rather than asserting a diagnosis.",
+      "criteria": {
+        "escalate_if_any": ["REDNESS_OR_DISCHARGE", "INPUT_UNCLEAR", "CONFLICTING_RESPONSES"]
+      },
+      "required_actions": {
+        "HUMAN_SUPPORT": ["Speak with an ASHA worker, PHC, vision centre, eye clinic, or qualified eye-care professional for next-step guidance."]
+      },
+      "guidance": {
+        "route": "HUMAN_SUPPORT",
+        "language": "bn",
+        "guidance_type": "PATIENT_NEXT_STEPS",
+        "text": "এই উপসর্গের জন্য আরও তথ্য ও একজন স্বাস্থ্যকর্মীর সহায়তা প্রয়োজন হতে পারে। নিকটবর্তী PHC, ভিশন সেন্টার, চোখের ক্লিনিক বা ASHA কর্মীর সঙ্গে কথা বলুন।",
+        "source_label": "Demo pathway derived for demonstration from cited screening and intervention references."
+      }
+    },
+    {
+      "pathway_id": "demo-unclear-input-escalation-v1",
+      "title": "Unclear or unsupported-input escalation pathway",
+      "source_ids": ["WHO-VESIH-2024", "INDIA-NPCBVI-DGHS"],
+      "status": "DEMO_ONLY_NOT_CLINICALLY_APPROVED",
+      "scope": "Safe default when answers are incomplete, conflicting, or no configured pathway matches.",
+      "criteria": {
+        "escalate_if_any": ["INPUT_UNCLEAR", "CONFLICTING_RESPONSES", "NO_APPROVED_PATHWAY_MATCHED", "OTHER"]
+      },
+      "required_actions": {
+        "HUMAN_SUPPORT": ["Do not guess the condition. Seek support from a health worker or eye-care service."]
+      },
+      "guidance": {
+        "route": "HUMAN_SUPPORT",
+        "language": "bn",
+        "guidance_type": "PATIENT_NEXT_STEPS",
+        "text": "এই তথ্যের ভিত্তিতে নিরাপদভাবে পরবর্তী পদক্ষেপ নির্ধারণ করা যাচ্ছে না। একজন স্বাস্থ্যকর্মী, PHC, ভিশন সেন্টার বা চোখের ক্লিনিকের সহায়তা নিন।",
+        "source_label": "Demo pathway derived for demonstration from cited screening and intervention references."
+      }
+    }
+  ]
+}

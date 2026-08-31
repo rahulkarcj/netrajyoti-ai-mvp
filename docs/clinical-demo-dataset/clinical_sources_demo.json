@@ -1,0 +1,32 @@
+[
+  {
+    "source_id": "WHO-VESIH-2024",
+    "title": "Vision and eye screening implementation handbook",
+    "publisher": "World Health Organization",
+    "published_year": 2024,
+    "url": "https://www.who.int/publications/b/70764",
+    "evidence_use": "Reference for community and primary-care screening and referral workflow design.",
+    "licence_note": "WHO lists this publication as CC BY-NC-SA 3.0 IGO. Confirm attribution, translation, adaptation, and non-commercial conditions before reuse.",
+    "accessed_on": "2026-08-26"
+  },
+  {
+    "source_id": "WHO-PECI-2022",
+    "title": "Package of eye care interventions",
+    "publisher": "World Health Organization",
+    "published_year": 2022,
+    "url": "https://www.who.int/publications/i/item/9789240048959",
+    "evidence_use": "Reference for evidence-based eye-care interventions and the levels of care needed for service planning.",
+    "licence_note": "Use as a cited evidence source. Confirm applicable rights before reproducing, translating, or storing substantive text.",
+    "accessed_on": "2026-08-26"
+  },
+  {
+    "source_id": "INDIA-NPCBVI-DGHS",
+    "title": "National Programme for Control of Blindness and Visual Impairment - Ophthalmology Division",
+    "publisher": "Directorate General of Health Services, Ministry of Health and Family Welfare, Government of India",
+    "published_year": null,
+    "url": "https://dghs.mohfw.gov.in/opthalmology-division.php",
+    "evidence_use": "India-specific programme and service-delivery context; not a standalone diagnostic or triage protocol.",
+    "licence_note": "Reference link only until rights and current local operating guidance are confirmed.",
+    "accessed_on": "2026-08-26"
+  }
+]

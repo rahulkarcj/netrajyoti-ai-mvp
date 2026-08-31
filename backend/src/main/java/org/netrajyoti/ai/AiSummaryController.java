@@ -8,11 +8,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/v1/ai")
 public class AiSummaryController {
-  private final OpenAiCaregiverSummaryService service;
-  public AiSummaryController(OpenAiCaregiverSummaryService service) { this.service = service; }
-  @PostMapping("/caregiver-summary")
-  public AiSummaryResponse caregiverSummary(@Valid @RequestBody AiSummaryRequest request) {
-    try { return service.createRoutineSummary(request.outcome()); }
-    catch (IllegalArgumentException exception) { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Routine outcome required"); }
+  private final OllamaRagCareAdviceService service;
+  public AiSummaryController(OllamaRagCareAdviceService service) { this.service = service; }
+  @PostMapping("/route-explanation")
+  public AiSummaryResponse routeExplanation(@Valid @RequestBody AiSummaryRequest request) {
+    try { return service.createRouteExplanation(request.outcome(), request.concerns(), request.history()); }
+    catch (IllegalArgumentException exception) { throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid route explanation request"); }
   }
 }

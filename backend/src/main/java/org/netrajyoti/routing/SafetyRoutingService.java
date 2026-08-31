@@ -1,18 +1,65 @@
 package org.netrajyoti.routing;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
+import org.netrajyoti.ai.ApprovedClinicalKnowledgeRepository;
+import org.netrajyoti.ai.ClinicalRoutingCriterion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-/** Deterministic safety rules. Clinical changes require clinician review and a new rule version. */
+/** Java applies database criteria with fixed, reviewable route precedence. */
 @Service
 public class SafetyRoutingService {
-  static final String RULE_VERSION = "2026.08.01";
-  private static final Set<Concern> URGENT = EnumSet.of(Concern.SUDDEN_VISION_CHANGE, Concern.SEVERE_PAIN, Concern.INJURY_OR_CHEMICAL);
+  private static final Logger log = LoggerFactory.getLogger(SafetyRoutingService.class);
+  static final String RULE_VERSION = "2026.08.31";
+  private static final Set<Concern> BASELINE_URGENT = EnumSet.of(
+      Concern.SUDDEN_VISION_CHANGE, Concern.SEVERE_PAIN, Concern.INJURY_OR_CHEMICAL);
+  private final ApprovedClinicalKnowledgeRepository knowledge;
+
+  public SafetyRoutingService(ApprovedClinicalKnowledgeRepository knowledge) {
+    this.knowledge = knowledge;
+  }
+
   public RoutingResponse route(RoutingRequest request) {
-    if (request.concerns().stream().anyMatch(URGENT::contains)) return response(RoutingOutcome.URGENT);
-    if (request.needsHumanSupport() || request.concerns().contains(Concern.OTHER)) return response(RoutingOutcome.HUMAN_SUPPORT);
-    return response(RoutingOutcome.ROUTINE);
+    // An explicit request for a person is a user preference, not a model or
+    // clinical decision. It always receives the human-support path.
+    if (request.needsHumanSupport()) return response(RoutingOutcome.HUMAN_SUPPORT);
+    List<ClinicalRoutingCriterion> criteria = knowledge.findRoutingCriteria(request.concerns(), request.history());
+    if (criteria.isEmpty()) {
+      // In the simulated demo, insufficient criteria deliberately fail closed
+      // to human support. In normal mode, retain the existing conservative
+      // baseline until qualified reviewers publish database criteria.
+      RoutingOutcome fallback = knowledge.isDemoRagEnabled()
+          ? RoutingOutcome.HUMAN_SUPPORT
+          : baselineRoute(request);
+      log.warn("No eligible database routing criteria; applying fallback route={}", fallback);
+      return response(fallback);
+    }
+    RoutingOutcome outcome = applyCriteria(criteria);
+    log.info("Applied database routing criteria: criteriaCount={}, route={}, demoMode={}",
+        criteria.size(), outcome, knowledge.isDemoRagEnabled());
+    return response(outcome);
+  }
+
+  private static RoutingOutcome baselineRoute(RoutingRequest request) {
+    if (request.concerns().stream().anyMatch(BASELINE_URGENT::contains)) return RoutingOutcome.URGENT;
+    if (request.concerns().contains(Concern.OTHER)) return RoutingOutcome.HUMAN_SUPPORT;
+    return RoutingOutcome.ROUTINE;
+  }
+
+  private RoutingOutcome applyCriteria(List<ClinicalRoutingCriterion> criteria) {
+    // Fixed precedence is deterministic and reviewable. A lower-priority rule
+    // cannot downgrade an urgent or escalation condition.
+    if (hasType(criteria, "URGENT_IF_ANY")) return RoutingOutcome.URGENT;
+    if (hasType(criteria, "ESCALATE_IF_ANY")) return RoutingOutcome.HUMAN_SUPPORT;
+    if (hasType(criteria, "ROUTINE_IF_ANY")) return RoutingOutcome.ROUTINE;
+    return RoutingOutcome.HUMAN_SUPPORT;
+  }
+
+  private static boolean hasType(List<ClinicalRoutingCriterion> criteria, String type) {
+    return criteria.stream().anyMatch(criterion -> type.equals(criterion.criterionType()));
   }
   private RoutingResponse response(RoutingOutcome outcome) { return new RoutingResponse(outcome, RULE_VERSION); }
 }

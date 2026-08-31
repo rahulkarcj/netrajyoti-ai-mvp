@@ -29,6 +29,8 @@ h1 { font-size: 33px; line-height: 1.22; margin: 19px 0 8px; letter-spacing: -.6
 .consent-instruction { display: grid; grid-column: 1 / -1; gap: 3px; }
 .consent-instruction b { color: #16353d; font-size: 16px; line-height: 1.35; }
 .consent-instruction small { color: #5d7780; font: 500 12px/1.4 Inter, sans-serif; }
+.consent-note { display: grid; grid-column: 2; gap: 3px; color: #476a73; font-size: 13px; line-height: 1.4; }
+.consent-note small { color: #668087; font: 12px/1.35 Inter, sans-serif; }
 
 /* Calm amber treatment for the welcome-screen urgent-information card. */
 .welcome-warning { border-left-color: #a86d00; background: #fff5dc; color: #704b04; }
@@ -44,6 +46,12 @@ h1 { font-size: 33px; line-height: 1.22; margin: 19px 0 8px; letter-spacing: -.6
 .callout span, .summary small, .support-option small, .facility small { display: block; margin-top: 5px; color: #53717a; font: 12px Inter, sans-serif; }
 .summary { background: #edf5fb; border-left: 5px solid #356a93; }
 .summary p { margin: 8px 0; font-weight: 600; }
+.rag-source-note { margin: 12px 0; padding: 12px 14px; border: 1px solid #b9ddd8; border-radius: 12px; background: #f2fbf9; color: #075e57; }
+.rag-source-note b, .rag-source-note small { display: block; }
+.rag-source-note small, .rag-source-note li span { color: #52727a; font: 12px/1.4 Inter, sans-serif; }
+.rag-source-note ul { margin: 8px 0 0; padding-left: 18px; font: 12px/1.4 Inter, sans-serif; }
+.rag-reference { margin-top: 12px; padding-top: 10px; border-top: 1px solid #c8e1dc; }
+.rag-reference b { font: 700 13px/1.35 'Hind Siliguri', Inter, sans-serif; }
 .support-option, .facility { border: 1px solid #c9dedb; background: #fff; }
 .support-option b, .facility b { display: block; color: #007d75; }
 .local-support-context { display: grid; gap: 4px; margin: 20px 0 14px; padding: 14px; border-left: 5px solid #356a93; border-radius: 14px; background: #edf5fb; color: #16353d; }
@@ -147,6 +155,14 @@ h1 { font-size: 33px; line-height: 1.22; margin: 19px 0 8px; letter-spacing: -.6
 .routine-result-card { display: grid; gap: 9px; margin: 22px 0 18px; padding: 18px; border-left: 5px solid #008b7e; border-radius: 16px; background: #eaf8f4; color: #16353d; line-height: 1.45; }
 .routine-result-card > b { font-size: 19px; line-height: 1.4; }
 .routine-result-card > small { color: #426d70; font: 14px/1.45 Inter, sans-serif; }
+.routine-nearby { display: grid; gap: 9px; margin: 16px 0 18px; padding: 14px; border: 1px solid #c9dedb; border-radius: 16px; background: #f7fbfa; }
+.routine-nearby-heading { display: grid; gap: 2px; }
+.routine-nearby-heading b, .routine-preview-item b { color: #007d75; }
+.routine-nearby-heading small, .routine-nearby p > small, .routine-preview-item small, .routine-preview-note small { display: block; margin-top: 3px; color: #53717a; font: 12px/1.4 Inter, sans-serif; }
+.routine-nearby p { margin: 0; color: #466a73; font: 13px/1.4 'Hind Siliguri', Inter, sans-serif; }
+.routine-preview-item { padding: 10px 11px; border: 1px solid #d5e5e2; border-radius: 11px; background: #fff; }
+.routine-preview-note { padding-top: 2px; color: #6a510a; font: 700 13px/1.4 'Hind Siliguri', Inter, sans-serif; }
+.routine-preview-note small { font-weight: 700; }
 .routine-result-label { display: grid; justify-self: start; gap: 1px; padding: 6px 9px; border-radius: 8px; color: #08766e; background: #d8f2eb; font: 700 11px/1.2 Inter, sans-serif; letter-spacing: .3px; }
 .routine-result-label small { color: #27827b; font: 600 9px/1.2 Inter, sans-serif; letter-spacing: 0; }
 .listen { align-items: center; margin-top: 0; }

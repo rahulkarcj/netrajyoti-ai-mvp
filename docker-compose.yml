@@ -10,6 +10,13 @@ services:
       - "5432:5432"
     volumes:
       - netrajyoti_pgdata:/var/lib/postgresql/data
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - netrajyoti_ollama:/root/.ollama
 
 volumes:
   netrajyoti_pgdata:
+  netrajyoti_ollama:
