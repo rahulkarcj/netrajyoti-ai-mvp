@@ -23,24 +23,30 @@ public class SafetyRoutingService {
   }
 
   public RoutingResponse route(RoutingRequest request) {
-    // An explicit request for a person is a user preference, not a model or
-    // clinical decision. It always receives the human-support path.
-    if (request.needsHumanSupport()) return response(RoutingOutcome.HUMAN_SUPPORT);
     List<ClinicalRoutingCriterion> criteria = knowledge.findRoutingCriteria(request.concerns(), request.history());
+    log.info("Routing input: concerns={}, history={}, needsHumanSupport={}, matchedCriteria={}",
+        request.concerns(), request.history(), request.needsHumanSupport(), criteria);
+    RoutingOutcome clinicalOutcome;
     if (criteria.isEmpty()) {
       // In the simulated demo, insufficient criteria deliberately fail closed
       // to human support. In normal mode, retain the existing conservative
       // baseline until qualified reviewers publish database criteria.
-      RoutingOutcome fallback = knowledge.isDemoRagEnabled()
+      clinicalOutcome = knowledge.isDemoRagEnabled()
           ? RoutingOutcome.HUMAN_SUPPORT
           : baselineRoute(request);
-      log.warn("No eligible database routing criteria; applying fallback route={}", fallback);
-      return response(fallback);
+      log.warn("No eligible database routing criteria; applying fallback route={}", clinicalOutcome);
+    } else {
+      clinicalOutcome = applyCriteria(criteria);
+      log.info("Applied database routing criteria: criteriaCount={}, route={}, demoMode={}",
+          criteria.size(), clinicalOutcome, knowledge.isDemoRagEnabled());
     }
-    RoutingOutcome outcome = applyCriteria(criteria);
-    log.info("Applied database routing criteria: criteriaCount={}, route={}, demoMode={}",
-        criteria.size(), outcome, knowledge.isDemoRagEnabled());
-    return response(outcome);
+    // A request for a person supplements care; it must never downgrade an
+    // urgent route determined by approved criteria or the conservative baseline.
+    RoutingOutcome finalOutcome = clinicalOutcome == RoutingOutcome.URGENT
+        ? RoutingOutcome.URGENT
+        : request.needsHumanSupport() ? RoutingOutcome.HUMAN_SUPPORT : clinicalOutcome;
+    log.info("Routing outcome: clinicalOutcome={}, finalOutcome={}", clinicalOutcome, finalOutcome);
+    return response(finalOutcome);
   }
 
   private static RoutingOutcome baselineRoute(RoutingRequest request) {

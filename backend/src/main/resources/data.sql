@@ -31,15 +31,22 @@ insert into clinical_criterion (pathway_id, criterion_type, input_code) values
 ('draft-demo-urgent-warning-signs-v1', 'URGENT_IF_ANY', 'SUDDEN_VISION_CHANGE'),
 ('draft-demo-urgent-warning-signs-v1', 'URGENT_IF_ANY', 'SEVERE_PAIN'),
 ('draft-demo-urgent-warning-signs-v1', 'URGENT_IF_ANY', 'INJURY_OR_CHEMICAL'),
+('draft-demo-routine-vision-check-v1', 'ROUTINE_IF_ANY', 'REDNESS_OR_DISCHARGE'),
 ('draft-demo-routine-vision-check-v1', 'ROUTINE_IF_ANY', 'BLURRY_VISION'),
 ('draft-demo-routine-vision-check-v1', 'ROUTINE_IF_ANY', 'READING_OR_DISTANCE_DIFFICULTY'),
 ('draft-demo-routine-vision-check-v1', 'ROUTINE_IF_ANY', 'EYE_CHECK_OR_GLASSES'),
 ('draft-demo-human-support-v1', 'ESCALATE_IF_ANY', 'OTHER'),
-('draft-demo-human-support-v1', 'ESCALATE_IF_ANY', 'NOT_SURE'),
-('draft-demo-human-support-v1', 'ESCALATE_IF_ANY', 'PREVIOUS_EYE_SURGERY'),
-('draft-demo-human-support-v1', 'ESCALATE_IF_ANY', 'PREVIOUS_EYE_INJURY'),
-('draft-demo-human-support-v1', 'ESCALATE_IF_ANY', 'ONGOING_EYE_TREATMENT')
+('draft-demo-human-support-v1', 'ESCALATE_IF_ANY', 'NOT_SURE')
 on conflict do nothing;
+
+-- Step 3A is optional background context in this demo. It is passed to the
+-- guidance retrieval request but must not silently override the route that
+-- Java determined from the current symptoms and explicit support request.
+-- This cleanup also removes rules seeded by earlier demo versions.
+delete from clinical_criterion
+where pathway_id = 'draft-demo-human-support-v1'
+  and criterion_type = 'ESCALATE_IF_ANY'
+  and input_code in ('PREVIOUS_EYE_SURGERY', 'PREVIOUS_EYE_INJURY', 'ONGOING_EYE_TREATMENT');
 
 insert into clinical_guidance (pathway_id, route, language, guidance_type, guidance_text, status) values
 ('draft-demo-urgent-warning-signs-v1', 'URGENT', 'bn', 'PATIENT_NEXT_STEPS', 'আপনার দেওয়া তথ্য অনুযায়ী আজই জরুরি চোখের চিকিৎসাসেবা নেওয়া গুরুত্বপূর্ণ। দেরি করবেন না। সম্ভব হলে পরিবারের একজন বিশ্বস্ত সদস্যকে সঙ্গে নিন।', 'DEMO_SIMULATED_NOT_FOR_CLINICAL_USE'),

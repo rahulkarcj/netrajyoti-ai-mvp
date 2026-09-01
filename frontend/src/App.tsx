@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { evaluate, routeExplanation } from './api';
 import type { CaregiverSummary, Concern, HistoryCode, Outcome } from './api';
 
@@ -14,9 +14,12 @@ const choices: Choice[] = [
   { id: 'INJURY_OR_CHEMICAL', bn: 'চোখে আঘাত লেগেছে বা রাসায়নিক পড়েছে', en: 'Eye injury or chemical exposure', urgent: true },
   { id: 'REDNESS_OR_DISCHARGE', bn: 'চোখ লাল, জ্বালা করছে বা পানি/পুঁজ পড়ছে', en: 'Redness, irritation, or discharge' },
   { id: 'BLURRY_VISION', bn: 'ধীরে ধীরে ঝাপসা দেখছি', en: 'Gradually blurry vision' },
+  { id: 'READING_OR_DISTANCE_DIFFICULTY', bn: 'পড়তে বা দূরে দেখতে অসুবিধা হচ্ছে', en: 'Difficulty reading or seeing at a distance' },
+  { id: 'EYE_CHECK_OR_GLASSES', bn: 'চোখ পরীক্ষা বা চশমার পরামর্শ চাই', en: 'I would like an eye check or glasses advice' },
   { id: 'OTHER', bn: 'আমি নিশ্চিত নই / অন্য সমস্যা', en: 'I am not sure / another concern' }
 ];
 const urgentChoices = choices.filter(choice => choice.urgent);
+const nonUrgentChoices = choices.filter(choice => !choice.urgent);
 const historyChoices: HistoryChoice[] = [
   { id: 'PREVIOUS_EYE_SURGERY', bn: 'আগে চোখের অপারেশন হয়েছে', en: 'Previous eye operation' },
   { id: 'PREVIOUS_EYE_INJURY', bn: 'আগে চোখে আঘাত লেগেছে', en: 'Previous eye injury' },
@@ -24,11 +27,6 @@ const historyChoices: HistoryChoice[] = [
   { id: 'USES_CONTACT_LENSES', bn: 'কনট্যাক্ট লেন্স ব্যবহার করি', en: 'I use contact lenses' },
   { id: 'ONGOING_EYE_TREATMENT', bn: 'চোখের জন্য নিয়মিত চিকিৎসা চলছে', en: 'Ongoing eye treatment' }
 ];
-choices.splice(0, choices.length,
-  ...choices.filter(choice => !choice.urgent),
-  { id: 'READING_OR_DISTANCE_DIFFICULTY', bn: 'পড়তে, দূরের জিনিস দেখতে বা মুখ চিনতে অসুবিধা হচ্ছে', en: 'Difficulty reading, seeing at a distance, or recognising faces' },
-  { id: 'EYE_CHECK_OR_GLASSES', bn: 'চশমা লাগবে কি না জানতে বা চোখ পরীক্ষা করাতে চাই', en: 'I need glasses or an eye check-up' }
-);
 const blurryVision = choices.find(choice => choice.id === 'BLURRY_VISION');
 const rednessOrDischarge = choices.find(choice => choice.id === 'REDNESS_OR_DISCHARGE');
 const otherProblem = choices.find(choice => choice.id === 'OTHER');
@@ -68,7 +66,21 @@ const localitiesByDistrict: Record<string, { bn: string; en: string }[]> = {
   ]
 };
 
-function speak(text: string) { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(text)); } }
+function speak(text: string) {
+  if (!('speechSynthesis' in window)) { alert('Audio is unavailable in this browser.'); return; }
+  const utterance = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
+  const bengaliVoice = voices.find(voice => voice.lang.toLowerCase() === 'bn-in')
+    ?? voices.find(voice => voice.lang.toLowerCase().startsWith('bn'))
+    ?? voices.find(voice => /bangla|bengali/i.test(voice.name));
+  utterance.lang = bengaliVoice?.lang ?? 'bn-IN';
+  utterance.voice = bengaliVoice ?? null;
+  utterance.rate = 0.72;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('welcome');
@@ -90,11 +102,52 @@ export default function App() {
   const [includePatientDetails, setIncludePatientDetails] = useState(false);
   const [humanLocationUsed, setHumanLocationUsed] = useState(false);
   const [shareStatus, setShareStatus] = useState('');
+  useEffect(() => { window.scrollTo(0, 0); }, [screen]);
   const selectedChoices = useMemo(() => choices.filter(choice => selected.includes(choice.id)), [selected]);
-  const toggle = (id: Concern) => setSelected(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
-  const toggleHistory = (id: HistoryCode) => setHistory(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
+  const toggle = (id: Concern) => {
+    setSelected(current => {
+      if (current.includes(id)) return current.filter(item => item !== id);
+      // “Other / not sure” represents an unclear presentation. It must not
+      // linger after the user gives a defined symptom, because OTHER is an
+      // explicit deterministic Human Support criterion.
+      if (id === 'OTHER') return ['OTHER'];
+      return [...current.filter(item => item !== 'OTHER'), id];
+    });
+    // A changed symptom selection starts a new assessment. Do not carry a
+    // previous history, request for human support, or route explanation
+    // forward. This prevents a hidden escalation history from a prior journey
+    // changing a newly selected Routine symptom into Human Support.
+    setHistory([]);
+    setNeedsHelp(false);
+    setOutcome(null);
+    setAiSummary(null);
+  };
+  const toggleHistory = (id: HistoryCode) => {
+    setHistory(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
+    // History is part of the deterministic routing input. When it changes,
+    // invalidate any route that was calculated for the earlier history.
+    setOutcome(null);
+    setAiSummary(null);
+  };
+  const skipHistory = () => {
+    setHistory([]);
+    setOutcome(null);
+    setAiSummary(null);
+    setScreen('decision');
+  };
+  const returnToConcerns = () => {
+    // Returning to Screen 2 means the user is revising the assessment from
+    // its first input. Clear all downstream routing inputs so history from a
+    // prior Human Support journey cannot silently affect the new result.
+    setSelected(current => current.filter(id => !urgentChoices.some(choice => choice.id === id)));
+    setHistory([]);
+    setNeedsHelp(false);
+    setOutcome(null);
+    setAiSummary(null);
+    setScreen('concerns');
+  };
   const isUrgent = selected.some(id => urgentChoices.some(choice => choice.id === id));
-  const selectedShareSymptoms = [...urgentChoices, ...choices].filter(choice => selected.includes(choice.id));
+  const selectedShareSymptoms = choices.filter(choice => selected.includes(choice.id));
   const urgentShareText = `NetraJyoti-এর তথ্য অনুযায়ী আজই জরুরি চোখের চিকিৎসাসেবা নেওয়ার পরামর্শ দেওয়া হচ্ছে।\n\nনির্বাচিত সমস্যা ও লক্ষণ / Selected concerns and symptoms:\n${selectedShareSymptoms.map(choice => `• ${choice.bn} / ${choice.en}`).join('\n')}\n\nসম্ভব হলে পরিবারের একজন সদস্য বা পরিচিত কাউকে সঙ্গে নিয়ে নিকটবর্তী চোখের হাসপাতাল বা জরুরি চিকিৎসাসেবায় যান। দেরি করবেন না।\nIf possible, go with a family member or someone you trust to a nearby eye hospital or urgent-care service. Do not delay.`;
 
   const routineCareMessage = aiSummary?.summaryBn ?? 'পরবর্তী কয়েক দিনের মধ্যে ভিশন সেন্টার বা চোখের ক্লিনিকে যাওয়ার পরিকল্পনা করুন। যাওয়ার আগে পরিষেবার সময় নিশ্চিত করুন। উপসর্গ হঠাৎ খারাপ হলে বা তীব্র ব্যথা হলে দেরি না করে জরুরি চোখের সেবা নিন।';
@@ -176,26 +229,34 @@ export default function App() {
   }
   async function choosePath() {
     setBusy(true);
-    try { setOutcome(await evaluate(selected, history, needsHelp)); }
-    catch { setOutcome(isUrgent ? 'URGENT' : needsHelp || selected.includes('OTHER') ? 'HUMAN_SUPPORT' : 'ROUTINE'); }
-    finally { setBusy(false); }
-  }
-  function openOutcome() {
-    if (!outcome) return;
-    void requestRouteExplanation(outcome);
-    if (outcome === 'URGENT') setScreen('urgent'); else if (outcome === 'ROUTINE') setScreen('routineDetails'); else setScreen('human');
+    setAiSummary(null);
+    let route: Outcome;
+    try {
+      route = await evaluate(selected, history, needsHelp);
+    } catch {
+      route = isUrgent ? 'URGENT' : needsHelp || selected.includes('OTHER') ? 'HUMAN_SUPPORT' : 'ROUTINE';
+    } finally {
+      setBusy(false);
+    }
+    // Always navigate from a fresh calculation. This prevents an earlier
+    // Human Support result from being reused after the answers are edited.
+    setOutcome(route);
+    void requestRouteExplanation(route);
+    if (route === 'URGENT') setScreen('urgent');
+    else if (route === 'ROUTINE') setScreen('routineDetails');
+    else setScreen('human');
   }
   const urgentBanner = <div className="result-banner urgent">জরুরি: দেরি না করে চোখের চিকিৎসাসেবা নিন <small>Urgent: seek eye care without delay</small></div>;
 
   if (screen === 'welcome') return <Page><span className="eyebrow">Safe next steps</span><h1>চোখের সমস্যায়<br />সহজ ও নিরাপদ সহায়তা</h1><p className="english">Bengali-first eye-care guidance for clear, safe next steps.</p><Notice bn="জরুরি লক্ষণ থাকলে দেরি করবেন না।" en="Do not wait if there is sudden vision change, severe pain, injury, or chemical exposure." /><label className="consent"><span className="consent-instruction"><b>শুরু করার আগে নিচের সম্মতি নির্বাচন করুন।</b><small>Select the acknowledgement below before you begin.</small></span><input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} /><span className="consent-copy"><b>NetraJyoti আমাকে নিরাপদ পরবর্তী পদক্ষেপ ও উপযুক্ত চোখের সেবার পথ বুঝতে সাহায্য করে।</b><small>NetraJyoti helps me understand safe next steps and the right path to suitable eye care.</small></span><span className="consent-note">আপনার নির্বাচিত তথ্য শুধু নিরাপদ পরবর্তী পদক্ষেপ জানাতে ব্যবহার করা হবে।<small>Your selected information will be used only to provide safe next steps.</small></span></label><Primary className="welcome-start" disabled={!consent} onClick={() => setScreen('concerns')}>শুরু করুন<small>Start safely</small></Primary>{!consent && <p className="consent-hint">সম্মতি নির্বাচন করলে শুরু করতে পারবেন।<small>Select the acknowledgement to start.</small></p>}</Page>;
 
-  if (screen === 'concerns') return <Page back={() => setScreen('welcome')}><Step label="Step 2" bn="আপনার চোখের কী কী উপসর্গ আছে?" en="Which eye symptoms are you experiencing?" /><p className="selection-guidance"><b>এক বা একাধিক উপসর্গ বেছে নিন।</b><small>Select one or more symptoms.</small></p><ChoiceList choices={choices} selected={selected} toggle={toggle} /><div className="voice-card"><b>🎙️ আরও তথ্য বলতে চান?</b><div className="voice-helper"><span>আপনার কথা এখানে লেখা হবে, তবে নিরাপদ পরবর্তী পদক্ষেপ নির্ধারণে এটি ব্যবহার করা হবে না।</span><small>Your words will appear here, but they are not used to determine the safe next step.</small></div><button className="voice-button" onClick={captureVoice}>বলুন <small>Speak a full sentence</small></button><textarea value={voiceNote} onChange={event => setVoiceNote(event.target.value)} placeholder="ঐচ্ছিক: এখানে লিখতে পারেন" /></div><Primary disabled={!selected.length} onClick={() => setScreen('urgentCheck')}>জরুরি লক্ষণ দেখুন<small>Check urgent warning signs</small></Primary></Page>;
+  if (screen === 'concerns') return <Page back={() => setScreen('welcome')}><Step label="Step 2" bn="আপনার চোখের কী কী উপসর্গ আছে?" en="Which eye symptoms are you experiencing?" /><p className="selection-guidance"><b>এক বা একাধিক উপসর্গ বেছে নিন।</b><small>Select one or more symptoms.</small></p><ChoiceList choices={nonUrgentChoices} selected={selected} toggle={toggle} /><div className="voice-card"><b>🎙️ আরও তথ্য বলতে চান?</b><div className="voice-helper"><span>আপনার কথা এখানে লেখা হবে, তবে নিরাপদ পরবর্তী পদক্ষেপ নির্ধারণে এটি ব্যবহার করা হবে না।</span><small>Your words will appear here, but they are not used to determine the safe next step.</small></div><button className="voice-button" onClick={captureVoice}>বলুন <small>Speak a full sentence</small></button><textarea value={voiceNote} onChange={event => setVoiceNote(event.target.value)} placeholder="ঐচ্ছিক: এখানে লিখতে পারেন" /></div><Primary disabled={!selected.length} onClick={() => setScreen('urgentCheck')}>জরুরি লক্ষণ দেখুন<small>Check urgent warning signs</small></Primary></Page>;
 
-  if (screen === 'urgentCheck') return <Page back={() => setScreen('concerns')}><Step label="Step 3" bn="জরুরি সতর্ক লক্ষণ আছে কি?" en="Urgent warning-sign check" urgent /><Notice bn="নিচের যেকোনো একটি থাকলে আজই চোখের সেবা নিন।" en="Any urgent sign routes you to urgent eye care today." /><ChoiceList choices={urgentChoices} selected={selected} toggle={toggle} urgent /><label className="help"><input type="checkbox" checked={needsHelp} onChange={event => setNeedsHelp(event.target.checked)} /><span>আমি নিশ্চিত নই / একজন সহায়তাকারীর সঙ্গে কথা বলতে চাই<small>I am not sure or I want support from a person.</small></span></label><Primary onClick={() => setScreen('history')}>পরের ধাপে যান<small>Continue</small></Primary></Page>;
+  if (screen === 'urgentCheck') return <Page back={returnToConcerns}><Step label="Step 3" bn="জরুরি সতর্ক লক্ষণ আছে কি?" en="Urgent warning-sign check" urgent /><Notice bn="নিচের যেকোনো একটি থাকলে আজই চোখের সেবা নিন।" en="Any urgent sign routes you to urgent eye care today." /><ChoiceList choices={urgentChoices} selected={selected} toggle={toggle} urgent /><label className="help"><input type="checkbox" checked={needsHelp} onChange={event => { setNeedsHelp(event.target.checked); setOutcome(null); setAiSummary(null); }} /><span>আমি নিশ্চিত নই / একজন সহায়তাকারীর সঙ্গে কথা বলতে চাই<small>Not sure or I want support from a person.</small></span></label><Primary onClick={() => setScreen('history')}>পরের ধাপে যান<small>Continue</small></Primary></Page>;
 
-  if (screen === 'history') return <Page back={() => setScreen('urgentCheck')}><Step label="Step 3A" bn="আগের চোখের চিকিৎসার তথ্য" en="Optional previous eye-care information" /><p className="english">Optional structured information may provide context. You can continue without selecting anything.</p><HistoryChoiceList choices={historyChoices} selected={history} toggle={toggleHistory} /><Primary onClick={() => setScreen('decision')}>নিরাপদ নির্দেশনা দেখুন<small>View safe guidance</small></Primary><TextButton onClick={() => setScreen('decision')}>এই ধাপটি বাদ দিন · Skip this step</TextButton></Page>;
+  if (screen === 'history') return <Page back={() => setScreen('urgentCheck')}><Step label="Step 3A" bn="আগের চোখের চিকিৎসার তথ্য" en="Optional previous eye-care information" /><p className="english">Optional structured information provides context for guidance. It does not change the route in this demo.</p><HistoryChoiceList choices={historyChoices} selected={history} toggle={toggleHistory} /><Primary onClick={() => setScreen('decision')}>নিরাপদ নির্দেশনা দেখুন<small>View safe guidance</small></Primary><TextButton onClick={skipHistory}>এই ধাপটি বাদ দিন · Skip this step</TextButton></Page>;
 
-  if (screen === 'decision') return <Page back={() => setScreen('history')}><Step label="Step 4" bn="NetraJyoti নিরাপদ পরবর্তী পদক্ষেপ নির্ধারণ করছে" en="NetraJyoti is preparing safe guidance" /><div className="progress-checks"><div><i>✓</i><span><b>চোখের সমস্যার তথ্য নেওয়া হয়েছে</b><small>Eye-problem details have been received.</small></span></div><div><i>✓</i><span><b>জরুরি লক্ষণ যাচাই করা হয়েছে</b><small>Urgent warning signs have been checked.</small></span></div><div><i>✓</i><span><b>আপনার দেওয়া তথ্য পর্যালোচনা করা হচ্ছে</b><small>We are reviewing the information you shared.</small></span></div><div><i>✓</i><span><b>চোখের সেবার জন্য উপযুক্ত পরবর্তী পদক্ষেপ প্রস্তুত করা হচ্ছে</b><small>We are preparing the right next step for your eye care.</small></span></div></div>{outcome ? <><Notice bn={outcome === 'URGENT' ? 'NetraJyoti-এর নিরাপদ নির্দেশনা: আজই জরুরি চোখের সেবা নিন।' : outcome === 'ROUTINE' ? 'চোখ পরীক্ষা করানোর নিরাপদ নির্দেশনা প্রস্তুত হয়েছে।' : 'মানব সহায়তার নিরাপদ পথ প্রস্তুত হয়েছে।'} en={outcome === 'URGENT' ? 'NetraJyoti guidance: seek urgent eye care today.' : 'Safe guidance is ready.'} /><Primary onClick={openOutcome}>নিরাপদ নির্দেশনা দেখুন<small>View safe guidance</small></Primary></> : <Primary disabled={busy} onClick={choosePath}>{busy ? 'নিরাপদ নির্দেশনা প্রস্তুত করা হচ্ছে…' : 'নিরাপদ নির্দেশনা দেখুন'}<small>{busy ? 'Preparing safe guidance' : 'View safe guidance'}</small></Primary>}</Page>;
+  if (screen === 'decision') return <Page back={() => setScreen('history')}><Step label="Step 4" bn="NetraJyoti নিরাপদ পরবর্তী পদক্ষেপ নির্ধারণ করছে" en="NetraJyoti is preparing safe guidance" /><div className="progress-checks"><div><i>✓</i><span><b>চোখের সমস্যার তথ্য নেওয়া হয়েছে</b><small>Eye-problem details have been received.</small></span></div><div><i>✓</i><span><b>জরুরি লক্ষণ যাচাই করা হয়েছে</b><small>Urgent warning signs have been checked.</small></span></div><div><i>✓</i><span><b>আপনার দেওয়া তথ্য পর্যালোচনা করা হচ্ছে</b><small>We are reviewing the information you shared.</small></span></div><div><i>✓</i><span><b>চোখের সেবার জন্য উপযুক্ত পরবর্তী পদক্ষেপ প্রস্তুত করা হচ্ছে</b><small>We are preparing the right next step for your eye care.</small></span></div></div><Primary disabled={busy} onClick={choosePath}>{busy ? 'নিরাপদ নির্দেশনা প্রস্তুত করা হচ্ছে…' : 'নিরাপদ নির্দেশনা দেখুন'}<small>{busy ? 'Preparing safe guidance' : 'View safe guidance'}</small></Primary></Page>;
 
   if (screen === 'urgent') return <Page back={() => setScreen('decision')} urgent><Step label="5A" bn="এখনই চোখের চিকিৎসাসেবা নিন" en="Immediate action" /><RouteExplanation summary={aiSummary} loading={aiLoading} outcome="URGENT" /><div className="urgent-action-card"><span className="urgent-pill">জরুরি চিকিৎসা<small>Urgent care</small></span><div className="urgent-instruction"><b>আজই নিকটবর্তী চোখের হাসপাতাল বা জরুরি চিকিৎসাসেবায় যান।</b><small>Visit a nearby eye hospital or urgent-care service today.</small><hr /><strong>অপেক্ষা করবেন না। সম্ভব হলে পরিবারের কাউকে সঙ্গে নিন।</strong><small>Do not wait. If possible, ask a family member to accompany you.</small></div><Primary onClick={() => setScreen('urgentLocation')}>কাছাকাছি যাচাইকৃত সেবা খুঁজুন<small>Find verified care</small></Primary><Secondary onClick={() => setScreen('urgentShare')}>জরুরি বার্তা পরিবারের সঙ্গে ভাগ করুন<small>Share urgent message</small></Secondary><Secondary onClick={() => setScreen('urgentEnd')}>সরাসরি চিকিৎসাসেবা নিতে যান<small>Continue to care</small></Secondary></div></Page>;
 
@@ -203,7 +264,7 @@ export default function App() {
 
   if (screen === 'urgentPermission') return <UrgentRoute label="5A.2" title="বর্তমান অবস্থান ব্যবহার করতে দেবেন?" subtitle="Allow location access" back={() => setScreen('urgentLocation')}><div className="location-privacy"><b>কাছাকাছি যাচাইকৃত চোখের চিকিৎসাসেবা দেখানোর জন্য অবস্থান ব্যবহার করা হবে।</b><small>Your location is used only to show nearby verified eye-care services.</small></div><Primary onClick={requestCurrentLocation}>অনুমতি দিন<small>Allow and view services</small></Primary><Secondary onClick={() => setScreen('urgentArea')}>জেলা / ব্লক বেছে নিন<small>Select district / block</small></Secondary><Secondary onClick={() => setScreen('urgent')}>জরুরি ফলাফলে ফিরুন<small>Return to urgent result</small></Secondary></UrgentRoute>;
 
-  if (screen === 'urgentArea') return <UrgentRoute label="5A.3" title="আপনার এলাকা বেছে নিন" subtitle="Select your district and block" back={() => setScreen('urgentLocation')}><select className="area-input area-select" value={district} onChange={event => { setDistrict(event.target.value); setBlock(''); }}><option value="">জেলা নির্বাচন করুন / Select district</option><option value="North 24 Parganas">উত্তর ২৪ পরগনা / North 24 Parganas</option><option value="South 24 Parganas">দক্ষিণ ২৪ পরগনা / South 24 Parganas</option><option value="Nadia">নদিয়া / Nadia</option></select><select className="area-input area-select" value={block} onChange={event => setBlock(event.target.value)} disabled={!district}><option value="">ব্লক / শহর নির্বাচন করুন / Select block or town</option><option value="Block market">ব্লক বাজার / Block market</option><option value="District town">জেলা শহর / District town</option></select><Primary disabled={!district || !block} onClick={() => setScreen('urgentFacilities')}>যাচাইকৃত সেবা দেখুন<small>View verified services</small></Primary><Secondary onClick={() => setScreen('urgent')}>জরুরি ফলাফলে ফিরুন<small>Return to urgent result</small></Secondary></UrgentRoute>;
+  if (screen === 'urgentArea') return <UrgentRoute label="5A.3" title="আপনার এলাকা বেছে নিন" subtitle="Select your district and town, city, or block" back={() => setScreen('urgentLocation')}><select className="area-input area-select" value={district} onChange={event => { setDistrict(event.target.value); setBlock(''); }}><option value="">জেলা নির্বাচন করুন / Select district</option>{Object.keys(localitiesByDistrict).map(name => <option key={name} value={name}>{name === 'North 24 Parganas' ? 'উত্তর ২৪ পরগনা / North 24 Parganas' : name === 'South 24 Parganas' ? 'দক্ষিণ ২৪ পরগনা / South 24 Parganas' : 'নদিয়া / Nadia'}</option>)}</select><select className="area-input area-select" value={block} onChange={event => setBlock(event.target.value)} disabled={!district}><option value="">শহর / নগর বা ব্লক নির্বাচন করুন / Select town, city, or block</option>{(localitiesByDistrict[district] ?? []).map(place => <option key={place.en} value={place.en}>{place.bn} / {place.en}</option>)}</select><Primary disabled={!district || !block} onClick={() => setScreen('urgentFacilities')}>যাচাইকৃত সেবা দেখুন<small>View verified services</small></Primary><Secondary onClick={() => setScreen('urgent')}>জরুরি ফলাফলে ফিরুন<small>Return to urgent result</small></Secondary></UrgentRoute>;
 
   if (screen === 'urgentFacilities') return <UrgentRoute label="5A.4" title="আপনার এলাকার চোখের চিকিৎসাসেবা" subtitle="Verified care options" back={() => setScreen('urgentLocation')}><DemoNotice />{(showAllFacilities ? facilities : facilities.slice(0, 1)).map(facility => <Facility key={facility.en} verified {...facility} />)}<Primary onClick={() => { window.location.href = 'tel:+91330000000'; }}>হাসপাতালে ফোন করুন<small>Call hospital</small></Primary><Secondary onClick={() => setShowAllFacilities(true)}>আরও যাচাইকৃত সেবা দেখুন<small>Find more verified care</small></Secondary><Secondary onClick={() => setScreen('urgent')}>জরুরি ফলাফলে ফিরুন<small>Return to urgent result</small></Secondary></UrgentRoute>;
 
@@ -232,7 +293,13 @@ function UrgentRoute({ label, title, subtitle, back, children }: { label: string
   return <Page back={back} urgent><div className="urgent-route-card"><Notice bn="জরুরি: দেরি না করে চোখের চিকিৎসাসেবা নিন" en="Urgent: seek eye care without delay" /><span className="eyebrow urgent-tag">{label}</span><h1>{title}</h1><p className="english">{subtitle}</p>{children}</div></Page>;
 }
 
-function Page({ children, back, urgent }: { children: React.ReactNode; back?: () => void; urgent?: boolean }) { return <main className="page"><header>{back ? <button className="back" onClick={back}>← ফিরে যান</button> : <span /> }<div className="brand"><i />NetraJyoti <small>AI</small></div><span className="support">সহায়তা</span></header><section className={`content ${urgent ? 'urgent-page' : ''}`}>{children}</section><footer>নিরাপদ তথ্য, রোগ নির্ণয় নয় <span>•</span> Safe information, not a diagnosis</footer></main>; }
+function Page({ children, back, urgent }: { children: React.ReactNode; back?: () => void; urgent?: boolean }) {
+  const startAgain = () => {
+    window.speechSynthesis?.cancel();
+    window.location.reload();
+  };
+  return <main className="page"><header>{back ? <button className="back" type="button" onClick={back}><span>← ফিরে যান</span><small>Go back</small></button> : <span /> }<div className="brand"><i />NetraJyoti <small>AI</small></div>{back ? <button className="restart-control" type="button" onClick={startAgain} title="Start the journey again">↺ শুরু থেকে<small>Start again</small></button> : <span className="support">সহায়তা</span>}</header><section className={`content ${urgent ? 'urgent-page' : ''}`}>{children}</section><footer><span className="footer-copy">© 2026 NetraJyoti MVP</span><span className="footer-divider" aria-hidden="true">•</span><span className="footer-safety">নিরাপদ তথ্য, রোগ নির্ণয় নয়</span><span className="footer-divider" aria-hidden="true">•</span><span className="footer-safety">Safe information, not a diagnosis</span></footer></main>;
+}
 function Step({ label, bn, en, urgent }: { label: string; bn: string; en: string; urgent?: boolean }) {
   const copy = label === 'Step 2'
     ? { bn: 'আপনার চোখে কী কী সমস্যা হচ্ছে?', en: 'Which eye symptoms are you experiencing?' }
@@ -260,9 +327,11 @@ function RouteExplanation({ summary, loading, outcome }: { summary: CaregiverSum
       ? 'When no urgent warning signs are present, arrange an eye examination at a nearby vision centre or eye clinic in the next few days.'
       : 'When the next step is unclear, seek help from a health worker, nearby PHC, or eye-care service.';
   return <div className="rag-source-note">
-    <b>{hasValidatedExplanation ? 'অনুমোদিত তথ্যের ভিত্তিতে নির্দেশনা' : 'নিরাপদ নির্দেশনা'}</b>
-    <small>{hasValidatedExplanation ? 'Guidance based on approved information' : 'Safe fixed guidance'}</small>
-    <p>{summary.summaryBn}</p>
+    <div className="guidance-heading">
+      <b>{hasValidatedExplanation ? 'অনুমোদিত তথ্যের ভিত্তিতে নির্দেশনা' : 'নিরাপদ নির্দেশনা'}</b>
+      <span className="guidance-label">{hasValidatedExplanation ? 'Guidance based on approved information' : 'Safe fixed guidance'}</span>
+    </div>
+    <p className="guidance-bengali">{summary.summaryBn}</p>
     <small className="guidance-translation">{guidanceEnglish}</small>
     {hasValidatedExplanation && summary.sources.length > 0 && <div className="rag-reference"><b>তথ্যসূত্র</b><small>Reference source</small><ul>{summary.sources.map(source => <li key={source.id}>{source.title} <span>· Source accessed {source.reviewedOn}</span></li>)}</ul></div>}
   </div>;
