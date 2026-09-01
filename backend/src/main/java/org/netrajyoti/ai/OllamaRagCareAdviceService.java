@@ -82,6 +82,7 @@ public class OllamaRagCareAdviceService {
         .reduce("", (left, right) -> left + "\n\n" + right);
     String instructions = "Write exactly one concise Bengali eye-care navigation sentence, maximum 28 Bengali words. "
         + "The Java-selected route is " + outcome.name() + ". Preserve it exactly. Use ONLY the retrieved Bengali content. "
+        + "Give brief context for the route; do not repeat the fixed action card shown separately to the user. "
         + "This is not a diagnosis. Do not name a disease, medicine, dosage, treatment, cure, provider, address, price, appointment, or medical certainty. "
         + "Do not reduce urgency. Return Bengali text only: no JSON, Markdown, heading, or quotation marks.\n\nRetrieved content:\n" + retrievedContent;
     return Map.of("model", model, "stream", false, "keep_alive", "10m",

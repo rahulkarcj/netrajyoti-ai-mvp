@@ -38,6 +38,9 @@ h1 { font-size: 33px; line-height: 1.22; margin: 19px 0 8px; letter-spacing: -.6
 
 .voice-button { color: #007d75; border: 1px solid #009488; border-radius: 10px; background: #fff; padding: 9px 12px; cursor: pointer; font-weight: 700; }
 .voice-button small { font: 11px Inter, sans-serif; }
+.voice-card .voice-helper { display: grid; gap: 4px; line-height: 1.45; }
+.voice-card .voice-helper span, .voice-card .voice-helper small { display: block; }
+.voice-card .voice-helper small { color: #54717b; font: 12px/1.45 Inter, sans-serif; }
 .urgent-tag { color: #a52f29; background: #fff0ed; }
 .urgent-list { margin: 20px 0; }
 .urgent-page .primary { background: #c63d35; box-shadow: 0 9px 18px #c63d3530; }
@@ -49,6 +52,7 @@ h1 { font-size: 33px; line-height: 1.22; margin: 19px 0 8px; letter-spacing: -.6
 .rag-source-note { margin: 12px 0; padding: 12px 14px; border: 1px solid #b9ddd8; border-radius: 12px; background: #f2fbf9; color: #075e57; }
 .rag-source-note b, .rag-source-note small { display: block; }
 .rag-source-note small, .rag-source-note li span { color: #52727a; font: 12px/1.4 Inter, sans-serif; }
+.rag-source-note .guidance-translation { display: block; margin-top: -5px; font-size: 13px; line-height: 1.45; }
 .rag-source-note ul { margin: 8px 0 0; padding-left: 18px; font: 12px/1.4 Inter, sans-serif; }
 .rag-reference { margin-top: 12px; padding-top: 10px; border-top: 1px solid #c8e1dc; }
 .rag-reference b { font: 700 13px/1.35 'Hind Siliguri', Inter, sans-serif; }
