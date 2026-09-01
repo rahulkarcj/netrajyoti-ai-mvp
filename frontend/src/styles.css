@@ -122,6 +122,14 @@ h1 { font-size: 33px; line-height: 1.22; margin: 19px 0 8px; letter-spacing: -.6
 .care-confirmed { display: grid; gap: 5px; padding: 16px; border-left: 5px solid #008b7e; border-radius: 14px; background: #e4f7f1; color: #08655e; line-height: 1.4; }
 .care-confirmed small { color: #35736d; font: 13px/1.4 Inter, sans-serif; }
 .urgent-page + footer { display: none; }
+.route-result-summary { display: grid; gap: 10px; margin: 18px 0; padding: 14px; border: 1px solid #c9dedb; border-radius: 16px; background: #f7fcfb; }
+.route-result-summary.urgent { border-left: 5px solid #cc4038; background: #fff7f5; }
+.route-result-summary.routine { border-left: 5px solid #009488; background: #f2fbf8; }
+.route-result-summary.human { border-left: 5px solid #356a93; background: #f1f7fc; }
+.route-result-summary .route-result-label { display: grid; gap: 2px; color: #16353d; }
+.route-result-summary .route-result-label small { color: #54717b; font: 12px/1.35 Inter, sans-serif; }
+.route-result-summary .symptom-summary { margin: 0; }
+.route-result-summary .listen { margin: 0; }
 .selected-symptoms { display: grid; gap: 3px; padding: 14px; border: 1px solid #d5e8e4; border-radius: 14px; background: #f7fcfb; color: #16353d; }
 .selected-symptoms > small { color: #54717b; font: 12px/1.35 Inter, sans-serif; }
 .selected-symptoms ul { display: grid; gap: 7px; margin: 7px 0 0; padding-left: 20px; }
