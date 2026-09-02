@@ -11,7 +11,9 @@ NetraJyoti is a Bengali-first, non-diagnostic eye-care guidance PWA for rural We
 ## Prerequisites
 
 - Git
-- Docker Desktop (running)
+- Docker Desktop
+  - Used to run the local PostgreSQL database and local Ollama service through Docker Compose.
+  - A separate PostgreSQL or Ollama installation is not required.
 - Java Development Kit (JDK) 21
 - Node.js with npm
 
