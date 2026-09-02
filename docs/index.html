@@ -19,7 +19,7 @@
 </head>
 <body>
   <main class="page">
-    <div class="eyebrow">NetraJyoti MVP · Live project alignment · v6</div>
+    <div class="eyebrow">NetraJyoti MVP · Live project alignment</div>
     <h1 class="title">Live MVP journey: Bengali-first safe guidance, care navigation, and family support</h1>
     <p class="intro">Current MVP user journey: PostgreSQL retrieves versioned demo criteria from structured screening facts; Java determines the safe route; PostgreSQL then retrieves route guidance. Ollama provides a short Bengali explanation only after the route is fixed and Java validates it. Location and patient details remain optional and consent-led.</p>
     <div class="legend"><span class="badge teal">Routine guidance</span><span class="badge red">Urgent-care path</span><span class="badge blue">Human support</span><span class="badge amber">Consent and safety</span><span class="badge gray">Demo service data · no diagnosis</span></div>
@@ -167,6 +167,29 @@
     document.querySelectorAll('.live-patient-form').forEach((form) => {
       form.innerHTML = `<b>পরিবারের সঙ্গে ভাগ করার জন্য রোগীর তথ্য<span class="en">Optional patient details for sharing</span></b><span class="en">This information stays on this device and is added only to a message you choose to share.</span>${patientFields.map(([bn, en, placeholder]) => `<label>${bn}<span class="en">${en}</span><span class="live-patient-input">${placeholder}</span><span class="button secondary">🎙 বলুন<span class="en">Speak</span></span></label>`).join('')}<span class="live-patient-consent"><span class="dot"></span><span>শেয়ার করা বার্তায় এই তথ্য যুক্ত করতে আমি সম্মত।<span class="en">I agree to include these details in the shared message.</span></span></span>`;
     });
+
+    // Complete the small Human Support differences that are specific to the
+    // live 5C.1, 5C.2, and 5C.3 screens.
+    const humanStep = (id) => Array.from(document.querySelectorAll('.step')).find((step) => step.querySelector(':scope > .number')?.textContent.trim() === id);
+    const supportArea = humanStep('5C.1');
+    const areaTitle = supportArea?.querySelector('.screen-title');
+    if (areaTitle && !supportArea.querySelector('.human-area-copy')) {
+      areaTitle.insertAdjacentHTML('afterend', '<p class="copy human-area-copy">জেলা এবং শহর বা নগর নির্বাচন করুন। আপনার সুনির্দিষ্ট বাড়ির ঠিকানা প্রয়োজন নেই।<span class="en">Select your district and town or city. Your precise home address is not needed.</span></p>');
+    }
+
+    const supportServices = humanStep('5C.2');
+    const supportLocation = supportServices?.querySelector('.location');
+    if (supportLocation && !supportServices.querySelector('.screen-title')) {
+      supportLocation.insertAdjacentHTML('beforebegin', '<div class="screen-title">কাছের সহায়তার পথ<span class="en">Nearby people and services</span></div>');
+    }
+    const supportFooter = supportServices?.querySelector('.wireframe-footer');
+    if (supportFooter) supportFooter.textContent = 'এলাকা পরিবর্তন করুন · Change area · আবার শুরু করুন · Start again · © 2026 NetraJyoti MVP';
+
+    const humanFamily = humanStep('5C.3');
+    const humanReview = humanFamily?.querySelector('.live-review');
+    if (humanReview && !humanFamily.querySelector('.live-step8-links')) {
+      humanReview.insertAdjacentHTML('afterend', '<div class="live-step8-links">তথ্য বা বার্তা সম্পাদনা করুন · Edit details or message<br>সহায়তার পথে ফিরুন · Return to support options</div>');
+    }
 
   </script>
 </body>
