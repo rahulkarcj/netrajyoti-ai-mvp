@@ -14,7 +14,7 @@
     .live-step8{min-height:690px}.live-step8 .phone{min-height:545px;padding:0;overflow:hidden;border:0;border-radius:17px;background:#fff;box-shadow:0 8px 20px #1235400b}.live-step8-body{display:grid;gap:9px;padding:14px}.live-step8-pill{justify-self:start;padding:7px 11px;border-radius:17px;background:#dff5ef;color:#08766e;font:800 10px/1 Arial,sans-serif;letter-spacing:.08em}.live-step8-title{margin:2px 0;font-size:20px;font-weight:500;line-height:1.17}.live-message-card{display:grid;gap:5px;padding:11px;border-left:4px solid var(--blue);border-radius:12px;background:var(--blue-soft);color:#16353d}.live-message-label{justify-self:start;padding:4px 6px;border-radius:7px;background:#dcecf8;color:#315d7e;font-size:9px;font-weight:800}.live-symptoms{display:grid;gap:3px;padding:10px;border:1px solid #d5e8e4;border-radius:12px;background:#f7fcfb;font-size:11px}.live-symptoms ul{margin:2px 0 0;padding-left:16px}.live-patient-form{display:grid;gap:6px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#f8fbfa;font-size:11px}.live-patient-form label{display:grid;gap:2px;font-weight:800}.live-patient-input{padding:7px;border:1px solid #bdd8d4;border-radius:8px;background:#fff;color:#6f848a;font-weight:500}.live-patient-consent{display:flex;gap:6px;align-items:flex-start;line-height:1.3}.live-patient-consent .dot{width:14px;height:14px;flex-basis:14px}.live-step8 .button{margin-top:1px;padding:10px}.live-review{display:grid;gap:4px;padding:10px;border-left:4px solid var(--blue);border-radius:10px;background:var(--blue-soft);color:#244f6c;font-size:11px}.live-step8-links{display:grid;gap:3px;justify-items:center;color:#315a66;font-size:10px;text-decoration:underline}
     /* Navigation map and per-screen entry notes make every transition traceable. */
     .transition-map{margin:22px 0 28px;padding:18px;border:1px solid var(--line);border-radius:18px;background:#fff}.transition-map h2{margin:0 0 5px;font-size:18px}.transition-map>p{margin:0 0 14px;color:var(--muted);font-size:13px}.transition-lanes{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr;gap:10px}.transition-lane{padding:12px;border-radius:12px;background:#f7fcfb;border-left:4px solid var(--teal);font-size:12px}.transition-lane.urgent{background:#fff6f4;border-left-color:var(--red)}.transition-lane.human{background:#f1f8fd;border-left-color:var(--blue)}.transition-lane b{display:block;margin-bottom:5px;color:var(--ink)}.transition-lane ul{display:grid;gap:4px;margin:7px 0 0;padding-left:17px}.transition-note{display:grid;gap:3px;margin:0 0 13px;padding:9px 10px;border-radius:10px;background:#f2f9f7;border-left:4px solid var(--teal);color:#315a66;font-size:11px;line-height:1.35}.transition-note b{color:#16353d;font-size:11px}.transition-note.urgent{border-left-color:var(--red);background:#fff5f3}.transition-note.human{border-left-color:var(--blue);background:#f1f8fd}@media(max-width:1150px){.transition-lanes{grid-template-columns:1fr}}
-    .section[aria-label="Routine path"] .callout .en{font-weight:800}.wireframe-footer{display:flex;justify-content:center;gap:5px;margin-top:12px;padding-top:8px;border-top:1px solid #dce8e5;color:var(--muted);font-size:9px}
+    .section[aria-label="Routine path"] .callout .en{font-weight:800}.wireframe-footer{display:flex;justify-content:center;gap:5px;margin-top:12px;padding-top:8px;border-top:1px solid #dce8e5;color:var(--muted);font-size:9px}.wireframe-source-note{margin-top:7px;color:var(--muted);font-size:10px;line-height:1.35}.live-route-alert.neutral{border-left-color:var(--teal);background:var(--teal-soft);color:#145851}.live-route-alert.neutral .en{color:#315a66}
   </style>
 </head>
 <body>
@@ -103,6 +103,69 @@
       const annotation = number.parentElement.querySelector('.annotation');
       if (annotation) annotation.insertAdjacentElement('afterend', note);
       else number.insertAdjacentElement('afterend', note);
+    });
+
+    // Shared live-page controls: every page after welcome has Go back, Start again,
+    // and the standard safety footer.
+    const liveHeader = '<span>← ফিরে যান<br><small>Go back</small></span><span class="brand">◉ NetraJyoti <small>AI</small></span><span>↺ শুরু থেকে<br><small>Start again</small></span>';
+    document.querySelectorAll('.step').forEach((step) => {
+      const number = step.querySelector(':scope > .number')?.textContent.trim();
+      const phone = step.querySelector('.phone');
+      if (!number || number === '1' || !phone) return;
+
+      const simpleHeader = phone.querySelector(':scope > .top');
+      if (simpleHeader) simpleHeader.outerHTML = `<div class="live-page-header">${liveHeader}</div>`;
+      const liveHeaderElement = phone.querySelector(':scope > .live-page-header, :scope .live-step4-header, :scope .live-urgent-top');
+      if (liveHeaderElement) liveHeaderElement.innerHTML = liveHeader;
+      if (!phone.querySelector('.wireframe-footer')) {
+        phone.insertAdjacentHTML('beforeend', '<div class="wireframe-footer">© 2026 NetraJyoti MVP · নিরাপদ তথ্য, রোগ নির্ণয় নয় · Safe information, not a diagnosis</div>');
+      }
+    });
+
+    // Match the Bengali-first titles currently rendered by the React UI.
+    const currentTitles = {
+      '2': { bn: 'আপনার চোখে কী কী সমস্যা হচ্ছে?', en: 'Which eye symptoms are you experiencing?' },
+      '3': { bn: 'এর কোনোটি কি এখন হচ্ছে?', en: 'Is any of this happening right now?' }
+    };
+    document.querySelectorAll('.step').forEach((step) => {
+      const number = step.querySelector(':scope > .number')?.textContent.trim();
+      const copy = currentTitles[number];
+      const title = step.querySelector('.screen-title');
+      if (!copy || !title) return;
+      title.innerHTML = `${copy.bn}<span class="en">${copy.en}</span>`;
+    });
+
+    // Step 4 is a neutral progress state. The route is shown only after the user
+    // opens the corresponding result page.
+    const progressAlert = document.querySelector('.live-route-alert');
+    if (progressAlert) {
+      progressAlert.classList.add('neutral');
+      progressAlert.innerHTML = '<b>আপনার দেওয়া তথ্য থেকে নিরাপদ পরবর্তী পদক্ষেপ প্রস্তুত করা হচ্ছে।</b><span class="en">A safe next step is being prepared from the information you shared.</span>';
+    }
+
+    // A result can show either a Java-validated Ollama/RAG explanation or the
+    // Java fixed fallback. The wireframe displays the validated example and states
+    // the fallback behaviour alongside it.
+    document.querySelectorAll('.step').forEach((step) => {
+      const number = step.querySelector(':scope > .number')?.textContent.trim();
+      if (!['5A', '5C', '6'].includes(number)) return;
+      const outcomes = step.querySelectorAll('.outcome');
+      const guidance = Array.from(outcomes).find((outcome) => outcome.textContent.includes('অনুমোদিত তথ্যের ভিত্তিতে নির্দেশনা'));
+      if (guidance && !guidance.querySelector('.wireframe-source-note')) {
+        guidance.insertAdjacentHTML('beforeend', '<div class="wireframe-source-note">Validated Ollama/RAG example shown. If retrieval, Ollama, or validation is unavailable, the live UI shows Java fixed guidance instead.</div>');
+      }
+    });
+
+    // The live routine and human-support family forms include all optional details
+    // plus a voice-entry control for each field.
+    const patientFields = [
+      ['রোগীর নাম', 'Patient name', 'নাম লিখুন / Enter name'],
+      ['বয়স', 'Age', 'বয়স লিখুন / Enter age'],
+      ['ঠিকানা', 'Address', 'ঠিকানা লিখুন / Enter address'],
+      ['ফোন নম্বর', 'Phone number', 'ফোন নম্বর লিখুন / Enter phone number']
+    ];
+    document.querySelectorAll('.live-patient-form').forEach((form) => {
+      form.innerHTML = `<b>পরিবারের সঙ্গে ভাগ করার জন্য রোগীর তথ্য<span class="en">Optional patient details for sharing</span></b><span class="en">This information stays on this device and is added only to a message you choose to share.</span>${patientFields.map(([bn, en, placeholder]) => `<label>${bn}<span class="en">${en}</span><span class="live-patient-input">${placeholder}</span><span class="button secondary">🎙 বলুন<span class="en">Speak</span></span></label>`).join('')}<span class="live-patient-consent"><span class="dot"></span><span>শেয়ার করা বার্তায় এই তথ্য যুক্ত করতে আমি সম্মত।<span class="en">I agree to include these details in the shared message.</span></span></span>`;
     });
 
   </script>
