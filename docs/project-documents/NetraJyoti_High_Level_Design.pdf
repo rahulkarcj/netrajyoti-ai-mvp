@@ -9,14 +9,13 @@ endobj
 <<
 /Type /Pages
 /Count 5
-/Kids [ 4 0 R 10 0 R 12 0 R 14 0 R 17 0 R ]
+/Kids [ 4 0 R 10 0 R 12 0 R 14 0 R 16 0 R ]
 >>
 endobj
 3 0 obj
 <<
 /Type /Catalog
 /Pages 2 0 R
-/Outlines 16 0 R
 >>
 endobj
 4 0 obj
@@ -151,43 +150,125 @@ endstream
 endobj
 16 0 obj
 <<
->>
-endobj
-17 0 obj
-<<
-/Contents 18 0 R
+/Contents 17 0 R
 /MediaBox [ 0 0 595.2756 841.8898 ]
 /Resources <<
-/Font 19 0 R
-/ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+/Font <<
+/F1 18 0 R
+/F1-0 19 0 R
+/F2 20 0 R
+/F2-0 21 0 R
+>>
+/ProcSet [ /ImageB /ImageC /ImageI /PDF /Text ]
 >>
 /Rotate 0
 /Trans <<
 >>
 /Type /Page
+/Annots [ ]
 /Parent 2 0 R
 >>
 endobj
-18 0 obj
+17 0 obj
 <<
-/Filter [ /ASCII85Decode /FlateDecode ]
-/Length 737
+/Length 1619
 >>
 stream
-Gas1\gMY_1&:N^lc6KH!lb2!;a#%cA<D$/.,P?%d(>-bGl3e2%5JCW_,cI]BQ#(_X4m1$L1E6E95!6.Qpmg?m2$Xpg2rKQBUpinCd1@*JI5kit.2m_N'aK=s>Xh&ThY&o(WMkV4MaOWY)9mCG`^gJr(J23Nq"!GtS`=1>hmf*#DPjnb6ZS*cA2Tu2.!GE7\P*bf/hcWol.mQ"f8'568:Mi^f]+`)!Z;ZQP(Y@%66i:l-hs8]+.*E79(e-D.$tEs5U6Ig;M>3'_f4G>?1"ku%^%G?Rb1@%es.hUXP1:-GVe90R5gkJ^g]Sb?o]12#Z%5d%3a*BLsVfFQ@d(\Wjc)je`bWKDc._p9LV:1)jFpM#sjA<BauKiV/lV\6VS!7n\Mc0mIBOK/",5J8"]\0]4QYlbBC*!)HS#.k,)p$]<&.",7ZX+CYS]c6rbJ4b*N$uY%tX`Z*3!?ejK!sPjsKGmCL0#W85;%V[4nG\Tq4td#T@+\Kd\nStiAjfWM@!Wi3KU5GG<letF<0`+n],[]Gp!`Q&+rp,sBA$,"Aps6.h\cF*o(Re.<gh.,lB*P.D;p)?e%qiY%r"&F+&hD[LqEDR/UC<clHL*/<(OBhMi.`I'iMtI!'WC%?I!%P;)(tsW!*rS-U*"`qPGNSi@E\/.FOb(q[7S3Eg*NlO3QXeSBIQM60BcC)rj3G9)4:Cp.P],d2Pq+>G@i"^iVgCq>gm:42H*?S&!Z:k:1/8Ae~>
+q
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+BT /F2 8 Tf 9.6 TL ET
+0 .54902 .513725 rg
+BT 1 0 0 1 271.9614 785.1969 Tm (NETRAJYOTI AI | HIGH-LEVEL DESIGN | CURRENT CAPSTONE MVP) Tj T* ET
+.180392 .431373 .682353 rg
+BT /F2 18 Tf 21.6 TL ET
+BT 1 0 0 1 62.3622 722.8346 Tm (8. Future governed AI-agent scope) Tj T* ET
+.843137 .890196 .92549 RG
+.7 w
+n 62.3622 705.8268 m 532.9134 705.8268 l S
+q
+1 0 0 1 62.3622 612.4724 cm
+q
+.090196 .227451 .313725 rg
+BT 1 0 0 1 0 37 Tm /F1 11 Tf 16 TL (Governed AI-agent capabilities, such as service-directory validation or content-draft preparation) Tj T* (for human review, are future scope. They will not autonomously route users, diagnose) Tj T* (conditions, prescribe treatment, or publish unverified information.) Tj T* ET
+Q
+Q
+.843137 .890196 .92549 RG
+.5 w
+n 51.02362 68.0315 m 544.252 68.0315 l S
+.356863 .470588 .537255 rg
+BT /F1 7.5 Tf 9 TL ET
+BT 1 0 0 1 153.1278 45.35433 Tm (NetraJyoti AI MVP | Safe information, not a diagnosis | Demo data is not for clinical use) Tj T* ET
+ 
+
+Q
+
+q
+0.0 0.0 595.2756 841.8898 re
+W
+n
+1 0 0 1 0 0 cm
+BT
+/F1-0 12 Tf
+14.4 TL
+ET
+0.2 0.458824 0.72549 rg
+BT
+/F2-0 16 Tf
+19.2 TL
+ET
+BT
+1 0 0 1 62 500 Tm
+(Implementation clarification) Tj
+T*
+ET
+0.090196 0.239216 0.356863 rg
+BT
+/F1-0 11 Tf
+13.2 TL
+ET
+BT
+1 0 0 1 62 474 Tm
+(The current UI labels \047Find verified care\047 and \047View verified services\047 navigate to static demo) Tj
+T*
+ET
+BT
+1 0 0 1 62 457 Tm
+(options\056 They do not denote a live verified service directory or a freshness check\073 users must) Tj
+T*
+ET
+BT
+1 0 0 1 62 440 Tm
+(confirm availability locally before travel\056) Tj
+T*
+ET
+Q
+
+
 endstream
 endobj
-19 0 obj
-<<
-/F1 20 0 R
-/F2 21 0 R
->>
-endobj
-20 0 obj
+18 0 obj
 <<
 /BaseFont /Helvetica
 /Encoding /WinAnsiEncoding
 /Name /F1
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+19 0 obj
+<<
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+/Name /F1
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+20 0 obj
+<<
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+/Name /F2
 /Subtype /Type1
 /Type /Font
 >>
@@ -207,24 +288,24 @@ xref
 0000000015 00000 n 
 0000000054 00000 n 
 0000000141 00000 n 
-0000000207 00000 n 
-0000000406 00000 n 
-0000004250 00000 n 
-0000004301 00000 n 
-0000004408 00000 n 
-0000004520 00000 n 
-0000004635 00000 n 
-0000004836 00000 n 
-0000007361 00000 n 
-0000007562 00000 n 
-0000011185 00000 n 
-0000011386 00000 n 
-0000015200 00000 n 
-0000015222 00000 n 
-0000015424 00000 n 
-0000016253 00000 n 
-0000016297 00000 n 
-0000016405 00000 n 
+0000000190 00000 n 
+0000000389 00000 n 
+0000004233 00000 n 
+0000004284 00000 n 
+0000004391 00000 n 
+0000004503 00000 n 
+0000004618 00000 n 
+0000004819 00000 n 
+0000007344 00000 n 
+0000007545 00000 n 
+0000011168 00000 n 
+0000011369 00000 n 
+0000015183 00000 n 
+0000015444 00000 n 
+0000017116 00000 n 
+0000017224 00000 n 
+0000017332 00000 n 
+0000017445 00000 n 
 trailer
 <<
 /Size 22
@@ -232,5 +313,5 @@ trailer
 /Info 1 0 R
 >>
 startxref
-16518
+17558
 %%EOF
