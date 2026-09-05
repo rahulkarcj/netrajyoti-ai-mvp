@@ -1736,8 +1736,10 @@ endobj
 /Font <<
 /F1 96 0 R
 /F1-0 97 0 R
-/F2 98 0 R
-/F2-0 99 0 R
+/F1-1 98 0 R
+/F2 99 0 R
+/F2-0 100 0 R
+/F2-1 101 0 R
 >>
 /ProcSet [ /ImageB /ImageC /ImageI /PDF /Text ]
 >>
@@ -1751,9 +1753,10 @@ endobj
 endobj
 95 0 obj
 <<
-/Length 3155
+/Length 6065
 >>
 stream
+q
 q
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 .364706 .443137 .52549 rg
@@ -1909,6 +1912,170 @@ ET
 Q
 
 
+Q
+
+q
+0.0 0.0 595.28 841.89 re
+W
+n
+1 0 0 1 0 0 cm
+BT
+/F1-1 12 Tf
+14.4 TL
+ET
+1 1 1 rg
+n
+42 90 520 670 re
+f*
+0.180392 0.435294 0.701961 rg
+BT
+/F2-1 20 Tf
+24 TL
+ET
+BT
+1 0 0 1 56 735 Tm
+(Appendix B\056 Future controlled scope) Tj
+T*
+ET
+0.843137 0.886275 0.921569 RG
+0.7 w
+n
+56 715 m
+536 715 l
+S
+0.180392 0.435294 0.701961 rg
+BT
+/F2-1 13.5 Tf
+16.2 TL
+ET
+BT
+1 0 0 1 56 670 Tm
+(B\0561 Governed AI\055agent scope) Tj
+T*
+ET
+0.090196 0.247059 0.372549 rg
+BT
+/F1-1 10.1 Tf
+12.12 TL
+ET
+BT
+1 0 0 1 56 646.5 Tm
+(Governed AI\055agent capabilities\054 including service\055directory validation and content\055draft preparation for) Tj
+T*
+ET
+BT
+1 0 0 1 56 631.8 Tm
+(human review\054 are future scope\056 They will not autonomously route users\054 diagnose conditions\054 prescribe) Tj
+T*
+ET
+BT
+1 0 0 1 56 617.1 Tm
+(treatment\054 or publish unverified information\056) Tj
+T*
+ET
+0.180392 0.435294 0.701961 rg
+BT
+/F2-1 13.5 Tf
+16.2 TL
+ET
+BT
+1 0 0 1 56 584.4 Tm
+(B\0562 Clinical approval before pilot) Tj
+T*
+ET
+0.090196 0.247059 0.372549 rg
+BT
+/F1-1 10.1 Tf
+12.12 TL
+ET
+BT
+1 0 0 1 56 560.9 Tm
+(Current PostgreSQL pathways\054 routing criteria\054 Bengali guidance\054 and sources are) Tj
+T*
+ET
+BT
+1 0 0 1 56 546.2 Tm
+(DEMO\137SIMULATED\137NOT\137FOR\137CLINICAL\137USE\056 Before pilot or production\054 a qualified clinical\057content) Tj
+T*
+ET
+BT
+1 0 0 1 56 531.5 Tm
+(reviewer must approve the criteria\054 route precedence\054 guidance\054 and sources\054 with ownership\054 versioning\054) Tj
+T*
+ET
+BT
+1 0 0 1 56 516.8 Tm
+(change control\054 and rollback\056) Tj
+T*
+ET
+0.180392 0.435294 0.701961 rg
+BT
+/F2-1 13.5 Tf
+16.2 TL
+ET
+BT
+1 0 0 1 56 484.1 Tm
+(B\0563 Current service\055directory clarification) Tj
+T*
+ET
+0.090196 0.247059 0.372549 rg
+BT
+/F1-1 10.1 Tf
+12.12 TL
+ET
+BT
+1 0 0 1 56 460.6 Tm
+(Current UI actions such as \047Find verified care\047 and \047View verified services\047 lead to static demo options\054 not a) Tj
+T*
+ET
+BT
+1 0 0 1 56 445.9 Tm
+(live verified directory or freshness check\056 Users must confirm availability locally before travel\056) Tj
+T*
+ET
+0.180392 0.435294 0.701961 rg
+BT
+/F2-1 13.5 Tf
+16.2 TL
+ET
+BT
+1 0 0 1 56 413.2 Tm
+(B\0564 Future IVR access channel) Tj
+T*
+ET
+0.090196 0.247059 0.372549 rg
+BT
+/F1-1 10.1 Tf
+12.12 TL
+ET
+BT
+1 0 0 1 56 389.7 Tm
+(IVR is future scope\054 not a current MVP channel\056 A Bengali telephony\057IVR adapter may send approved) Tj
+T*
+ET
+BT
+1 0 0 1 56 375 Tm
+(DTMF or speech\055confirmed fixed response codes to the existing Java API\056 Deterministic Java routing and) Tj
+T*
+ET
+BT
+1 0 0 1 56 360.3 Tm
+(PostgreSQL criteria will remain unchanged\073 IVR will not introduce model\055led route selection\056 Before pilot) Tj
+T*
+ET
+BT
+1 0 0 1 56 345.6 Tm
+(use\054 it requires consent prompts\054 confirmation and retry handling\054 accessibility testing\054 telephony) Tj
+T*
+ET
+BT
+1 0 0 1 56 330.9 Tm
+(integration\054 and safe human\055support escalation\056) Tj
+T*
+ET
+Q
+
+
 endstream
 endobj
 96 0 obj
@@ -1931,9 +2098,9 @@ endobj
 endobj
 98 0 obj
 <<
-/BaseFont /Helvetica-Bold
+/BaseFont /Helvetica
 /Encoding /WinAnsiEncoding
-/Name /F2
+/Name /F1
 /Subtype /Type1
 /Type /Font
 >>
@@ -1947,8 +2114,26 @@ endobj
 /Type /Font
 >>
 endobj
+100 0 obj
+<<
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+/Name /F2
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+101 0 obj
+<<
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+/Name /F2
+/Subtype /Type1
+/Type /Font
+>>
+endobj
 xref
-0 100
+0 102
 0000000000 65535 f 
 0000000015 00000 n 
 0000000054 00000 n 
@@ -2044,17 +2229,19 @@ xref
 0001974550 00000 n 
 0001974859 00000 n 
 0001977999 00000 n 
-0001978250 00000 n 
-0001981458 00000 n 
-0001981566 00000 n 
-0001981674 00000 n 
-0001981787 00000 n 
+0001978278 00000 n 
+0001984396 00000 n 
+0001984504 00000 n 
+0001984612 00000 n 
+0001984720 00000 n 
+0001984833 00000 n 
+0001984947 00000 n 
 trailer
 <<
-/Size 100
+/Size 102
 /Root 3 0 R
 /Info 1 0 R
 >>
 startxref
-1981900
+1985061
 %%EOF
