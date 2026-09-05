@@ -1733,29 +1733,191 @@ endobj
 /Contents 95 0 R
 /MediaBox [ 0 0 612 792 ]
 /Resources <<
-/Font 96 0 R
-/ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+/Font <<
+/F1 96 0 R
+/F1-0 97 0 R
+/F2 98 0 R
+/F2-0 99 0 R
+>>
+/ProcSet [ /ImageB /ImageC /ImageI /PDF /Text ]
 >>
 /Rotate 0
 /Trans <<
 >>
 /Type /Page
+/Annots [ ]
 /Parent 2 0 R
 >>
 endobj
 95 0 obj
 <<
-/Filter [ /ASCII85Decode /FlateDecode ]
-/Length 690
+/Length 3155
 >>
 stream
-GatUo?Z2Df'ZJu*'^)`j;@`jfn<g(eQYGcXPWnH]"XigCQl2*j;Et(31lX7bg<4"5EK0AW483-CO9V>KAHQ0OpiOKk,8;*dKI&%\@T`gbQ:VueYU#'NS:ZSg,WXX<3:'2((q8R]oeai&8&o&V14`DF(=I13c>JreHN*%'D6^s*Ki\u3`TN`@@f@*dleBV'7=k.&rc,>PITtYC&%K8X4H=>%;#ETKEPg[;)!;LiLb+GsY`te)ETDtldh*r7Nt+p@KOe=3%ASblhK?E3bV*3T>Rc.$)I'i*Y149GSZAl14o3TMq@k%sGrgV@Hn8_\WeAU$^(-OKF3ksrA<sQ$U4El-A]]:)j!"18r5g1/7M4!($hK$M_'70'.DTC91Dq:YnRH#B"7]0,nL6(N>!9Ls$bfT2H8;nu7e\_26b.j7d;-3MV*;)Ae"sPA"aa7=8pOoN=GP>5Sp$`-:2N*SV`X"s5&RHKDoLCIBN,A;pI7BnTW!.*[iS9b@jlNs"ja'Kd97&<Gh^rl%Xn9WB*YUp&-l'47VuAalVY)GUJ*m6MNE'i3qK0+SQ<HJXP&E^%8XCrG8OMhCc7#AS!N9,M3FLkF\h%)R>EB!7'\L6SC*3K1+?nYTc=aCT1b:.9Lc!H7!C,Mrk!mLHKk][dcIVhV5gN:[Mhc!b*KqYnu^`O\>(&.2P0\0n/H!$!6,~>
+q
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+.364706 .443137 .52549 rg
+BT /F1 7.5 Tf 9 TL ET
+BT 1 0 0 1 302.85 761.04 Tm (NETRAJYOTI AI | TECHNICAL PRODUCT REQUIREMENTS DOCUMENT) Tj T* ET
+.180392 .458824 .713725 rg
+BT /F2 17 Tf 20.4 TL ET
+BT 1 0 0 1 56.16 702 Tm (Appendix B. Future governed AI-agent scope) Tj T* ET
+.839216 .882353 .921569 RG
+.6 w
+n 56.16 689.76 m 555.84 689.76 l S
+q
+1 0 0 1 56.16 618 cm
+q
+.094118 .211765 .356863 rg
+BT 1 0 0 1 0 37 Tm /F1 11 Tf 16 TL (Governed AI-agent capabilities, such as service-directory validation or content-draft preparation for) Tj T* (human review, are future scope. They will not autonomously route users, diagnose conditions,) Tj T* (prescribe treatment, or publish unverified information.) Tj T* ET
+Q
+Q
+.839216 .882353 .921569 RG
+.5 w
+n 46.08 38.88 m 565.92 38.88 l S
+.364706 .443137 .52549 rg
+BT /F1 7.5 Tf 9 TL ET
+BT 1 0 0 1 379.6275 24.48 Tm (Capstone technical product documentation | Page 14) Tj T* ET
+ 
+
+Q
+
+q
+0.0 0.0 595.28 841.89 re
+W
+n
+1 0 0 1 0 0 cm
+BT
+/F1-0 12 Tf
+14.4 TL
+ET
+1 1 1 rg
+n
+42 90 520 670 re
+f*
+0.180392 0.435294 0.701961 rg
+BT
+/F2-0 20 Tf
+24 TL
+ET
+BT
+1 0 0 1 56 735 Tm
+(Appendix B\056 Future controlled scope) Tj
+T*
+ET
+0.843137 0.886275 0.921569 RG
+0.7 w
+n
+56 715 m
+540 715 l
+S
+0.180392 0.435294 0.701961 rg
+BT
+/F2-0 14 Tf
+16.8 TL
+ET
+BT
+1 0 0 1 56 670 Tm
+(B\0561 Governed AI\055agent scope) Tj
+T*
+ET
+0.090196 0.247059 0.372549 rg
+BT
+/F1-0 10.5 Tf
+12.6 TL
+ET
+BT
+1 0 0 1 56 646 Tm
+(Governed AI\055agent capabilities\054 including service\055directory validation and content\055draft preparation for) Tj
+T*
+ET
+BT
+1 0 0 1 56 630.5 Tm
+(human review\054 are future scope\056 They will not autonomously route users\054 diagnose conditions\054) Tj
+T*
+ET
+BT
+1 0 0 1 56 615 Tm
+(prescribe treatment\054 or publish unverified information\056) Tj
+T*
+ET
+0.180392 0.435294 0.701961 rg
+BT
+/F2-0 14 Tf
+16.8 TL
+ET
+BT
+1 0 0 1 56 577.5 Tm
+(B\0562 Current service\055directory clarification) Tj
+T*
+ET
+0.090196 0.247059 0.372549 rg
+BT
+/F1-0 10.5 Tf
+12.6 TL
+ET
+BT
+1 0 0 1 56 553.5 Tm
+(Current UI actions such as \047Find verified care\047 and \047View verified services\047 lead to static demo options\054) Tj
+T*
+ET
+BT
+1 0 0 1 56 538 Tm
+(not a live verified directory or freshness check\056 Users must confirm availability locally before travel\056) Tj
+T*
+ET
+0.180392 0.435294 0.701961 rg
+BT
+/F2-0 14 Tf
+16.8 TL
+ET
+BT
+1 0 0 1 56 500.5 Tm
+(B\0563 Future IVR access channel) Tj
+T*
+ET
+0.090196 0.247059 0.372549 rg
+BT
+/F1-0 10.5 Tf
+12.6 TL
+ET
+BT
+1 0 0 1 56 476.5 Tm
+(IVR is future scope\054 not a current MVP channel\056 A Bengali telephony\057IVR adapter may send approved) Tj
+T*
+ET
+BT
+1 0 0 1 56 461 Tm
+(DTMF or speech\055confirmed fixed response codes to the existing Java API\056 Deterministic Java routing) Tj
+T*
+ET
+BT
+1 0 0 1 56 445.5 Tm
+(and PostgreSQL criteria will remain unchanged\073 IVR will not introduce model\055led route selection\056) Tj
+T*
+ET
+BT
+1 0 0 1 56 430 Tm
+(Before pilot use\054 it requires consent prompts\054 confirmation and retry handling\054 accessibility testing\054) Tj
+T*
+ET
+BT
+1 0 0 1 56 414.5 Tm
+(telephony integration\054 and safe human\055support escalation\056) Tj
+T*
+ET
+Q
+
+
 endstream
 endobj
 96 0 obj
 <<
-/F1 97 0 R
-/F2 98 0 R
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+/Name /F1
+/Subtype /Type1
+/Type /Font
 >>
 endobj
 97 0 obj
@@ -1776,8 +1938,17 @@ endobj
 /Type /Font
 >>
 endobj
+99 0 obj
+<<
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+/Name /F2
+/Subtype /Type1
+/Type /Font
+>>
+endobj
 xref
-0 99
+0 100
 0000000000 65535 f 
 0000000015 00000 n 
 0000000054 00000 n 
@@ -1873,16 +2044,17 @@ xref
 0001974550 00000 n 
 0001974859 00000 n 
 0001977999 00000 n 
-0001978191 00000 n 
-0001978973 00000 n 
-0001979017 00000 n 
-0001979125 00000 n 
+0001978250 00000 n 
+0001981458 00000 n 
+0001981566 00000 n 
+0001981674 00000 n 
+0001981787 00000 n 
 trailer
 <<
-/Size 99
+/Size 100
 /Root 3 0 R
 /Info 1 0 R
 >>
 startxref
-1979238
+1981900
 %%EOF
